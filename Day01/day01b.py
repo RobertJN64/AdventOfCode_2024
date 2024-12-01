@@ -2,19 +2,15 @@ import util
 
 def main():
     with open("Day01/day01.txt") as f:
-        lines = [line.strip().split('   ') for line in f.readlines()]
-    print(lines[0:10])
+        lines = f.readlines()
+        col_1 = [int(line.strip().split('   ')[0]) for line in lines]
+        col_2 = [int(line.strip().split('   ')[1]) for line in lines]
 
-    first = []
-    second = []
-    for a, b in lines:
-        a = int(a)
-        b = int(b)
-        first.append(a)
-        second.append(b)
+    print(col_1[0:10])
+    print(col_2[0:10])
 
     answer = 0
-    for item in first:
-        answer += second.count(item) * item
+    for item in col_1:
+        answer += col_2.count(item) * item
 
     print(answer)

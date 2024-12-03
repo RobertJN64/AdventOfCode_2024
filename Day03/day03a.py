@@ -1,4 +1,5 @@
 import util
+import re
 
 def main():
     with open("Day03/day03.txt") as f:
@@ -8,6 +9,9 @@ def main():
 
     answer = 0
     for line in lines:
-        answer += int(line)
+        cmds = re.findall(r'mul\(([0-9]+),([0-9]+)\)', line)
+        print(cmds)
+        for cmd in cmds:
+            answer += int(cmd[0]) * int(cmd[1])
 
     print(answer)

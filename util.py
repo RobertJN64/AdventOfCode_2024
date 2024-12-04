@@ -1,3 +1,4 @@
+# noinspection PyCompatibility
 def out_of_bounds(grid: list[list] | list[str], x: int, y: int):
     """
     Returns true if (x, y) is out of bounds of the grid
@@ -39,6 +40,9 @@ def debug_IO(f):
         print(s, f"-> {retval}")
         return retval
     return wrap
+
+cardinal = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+all_dirs = [(-1,-1),(1,1),(1,-1),(-1,1),(0,1),(1,0),(0,-1),(-1,0)]
 
 def wavefront(grid: list[list], start: tuple[int, int], end: tuple[int, int], constraint):
     """

@@ -1,4 +1,4 @@
-def out_of_bounds(grid: list[list], x: int, y: int):
+def out_of_bounds(grid: list[list] | list[str], x: int, y: int):
     """
     Returns true if (x, y) is out of bounds of the grid
     """

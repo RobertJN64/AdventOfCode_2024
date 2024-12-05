@@ -1,41 +1,35 @@
-import util
-
 def main():
     with open("Day05/day05.txt") as f:
         lines = [line.strip() for line in f.readlines()]
     print(lines[0:10])
 
-    orders = []
-    ship = []
-    puz = False
+    rules = []
+    manuals = []
+    scan_rules = True
+
     for line in lines:
         if line == '':
-            puz = True
+            scan_rules = False
             continue
 
-        if not puz:
-            orders.append(tuple(map(int, line.split('|'))))
+        if scan_rules:
+            rules.append(tuple(map(int, line.split('|'))))
         else:
-            ship.append(list(map(int, line.split(','))))
+            manuals.append(list(map(int, line.split(','))))
 
-    answer = 0
     bad = []
-    for line in ship:
-        valid = True
-        for rule in orders:
-            if rule[0] in line and rule[1] in line:
-                if line.index(rule[0]) > line.index(rule[1]):
-                    valid = False
-        if not valid:
-            bad.append(line)
+    for line in manuals:
+        for rule in rules:
+            if rule[0] in line and rule[1] in line and line.index(rule[0]) > line.index(rule[1]):
+                bad.append(line)
+                break
 
-    print(bad)
     answer = 0
     for line in bad:
         redo = True
         while redo:
             redo = False
-            for rule in orders:
+            for rule in rules:
                 if rule[0] in line and rule[1] in line:
                     k = line.index(rule[0])
                     j = line.index(rule[1])
@@ -44,7 +38,7 @@ def main():
                         line[j] = line[k]
                         line[k] = t
                         redo = True
-        print(line)
+
         answer += line[int(len(line) / 2)]
 
     print(answer)

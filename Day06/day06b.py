@@ -1,6 +1,7 @@
 import util
-import copy
+import line_profiler
 
+@line_profiler.profile
 def main():
     with open("Day06/day06.txt") as f:
         lines = [list(line.strip()) for line in f.readlines()]
@@ -14,6 +15,9 @@ def main():
             x = line.index('^')
             y = y_index
     start_pos = (x, y)
+
+    MAX_X = len(lines[0])
+    MAX_Y = len(lines)
 
     visited = set()
 
@@ -51,10 +55,9 @@ def main():
             print(f"Progress: {round(index * 100 / len(visited))}%")
 
         #print("trying to put a blocker here", pos)
-        t_lines = copy.deepcopy(lines)
         x, y = start_pos
         c_dir = 'U'
-        t_lines[pos[1]][pos[0]] = '#'
+        lines[pos[1]][pos[0]] = '#'
         t_visited = set()
 
         looped = False
@@ -63,17 +66,23 @@ def main():
             last_pos = (x, y)
             if c_dir == 'U':  # check forward
                 y -= 1
+                if y < 0:
+                    break
             if c_dir == 'R':
                 x += 1
+                if x >= MAX_X:
+                    break
             if c_dir == 'D':
                 y += 1
+                if y >= MAX_Y:
+                    break
             if c_dir == 'L':
                 x -= 1
+                if x < 0:
+                    break
 
-            if util.out_of_bounds(lines, x, y):
-                break
 
-            if t_lines[y][x] == '#':
+            if lines[y][x] == '#':
                 if c_dir == 'U':
                     c_dir = 'R'
                 elif c_dir == 'R':
@@ -88,6 +97,7 @@ def main():
                 looped = True
                 break
 
+        lines[pos[1]][pos[0]] = '.'
         if looped:
             answer += 1
     print(answer)

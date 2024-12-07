@@ -1,6 +1,9 @@
 import util
 import line_profiler
 
+# optimized with faster bounds checking + removing copies
+# could be further optimized by only checking the path after the obstacle is added, or by being smarter about where obstacles go
+
 @line_profiler.profile
 def main():
     with open("Day06/day06.txt") as f:

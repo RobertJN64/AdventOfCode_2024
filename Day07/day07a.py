@@ -1,11 +1,19 @@
 import util
 
-def get_possible(nums):
-    if len(nums) == 2:
-        return [nums[0] + nums[1], nums[0] * nums[1]]
-    else:
-        return [nums[-1] + x for x in get_possible(nums[:-1])] + [nums[-1] * x for x in get_possible(nums[:-1])]
+operations = [
+    lambda a, b: a + b,
+    lambda a, b: a * b,
+    # lambda a, b: int(str(a) + str(b)),
+]
 
+def get_possible(nums):
+    resp = []
+    for op in operations:
+        if len(nums) == 2:
+            resp.append(op(nums[0], nums[1]))
+        else:
+            resp.extend([op(x, nums[-1]) for x in get_possible(nums[:-1])])
+    return resp
 
 def main():
     with open("Day07/day07.txt") as f:
@@ -16,11 +24,7 @@ def main():
     for line in lines:
         answer = int(line[0])
         nums = list(map(int, line[1].split()))
-
-        print(get_possible(nums))
-
+        print(answer)
         if answer in get_possible(nums):
-
             count += answer
-
     print(count)

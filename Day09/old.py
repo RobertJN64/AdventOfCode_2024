@@ -17,36 +17,31 @@ def main():
 
     print(pairs)
     print(free)
-
-    checksum = 0
-    check_idx = 0
+    out_str = ''
     for idx, (pair_id, pair_len) in enumerate(pairs):
-        for i in range(0, pair_len):
-            checksum += pair_id * check_idx
-            check_idx += 1
-
+        out_str += str(pair_id) * pair_len
         pairs[idx][1] = 0
         free_len = free[idx]
 
         for neg_idx, (neg_pair_id, neg_pair_len) in enumerate(pairs[::-1]):
             if neg_pair_len > free_len:
-                for i in range(0, free_len):
-                    checksum += neg_pair_id * check_idx
-                    check_idx += 1
-
+                out_str += str(neg_pair_id) * free_len
                 pairs[-neg_idx-1][1] -= free_len
                 free_len = 0
                 break
             else:
-                for i in range(0, neg_pair_len):
-                    checksum += neg_pair_id * check_idx
-                    check_idx += 1
-
+                out_str += str(neg_pair_id) * neg_pair_len
                 pairs[-neg_idx-1][1] = 0
                 free_len -= neg_pair_len
-        check_idx += free_len
+        out_str += '.' * free_len
 
         #print(out_str)
         #print(pairs)
 
-    print(checksum)
+    check_sum = 0
+    for idx, item in enumerate(out_str):
+        if item != '.':
+            check_sum += idx * int(item)
+
+
+    print(check_sum)

@@ -1,56 +1,57 @@
 import util
 
+class Block:
+    def __init__(self, block_length, pair_id):
+        self.block_length = block_length
+        self.pair_id = pair_id
+
+    def __repr__(self):
+        #return f"block with pair_id {self.pair_id} and length {self.block_length}"
+        if self.pair_id == 'free':
+            return '.' * self.block_length
+        else:
+            return str(self.pair_id) * self.block_length
+
 def main():
     with open("Day09/day09.txt") as f:
         line = [line.strip() for line in f.readlines()][0]
 
-    print(line[0:10])
-    pairs = []
-    free = []
-    counter = 0
+    blocks = []
+    files_to_move = []
     for idx, item in enumerate(line):
         if idx % 2 == 0:
-            pairs.append([counter, int(idx/2), int(item), int(item)])
+            file_block = Block(int(item), int(idx/2))
+            blocks.append(file_block)
+            files_to_move.append(file_block)
         else:
-            free.append([counter, int(item), []])
-        counter += int(item)
+            blocks.append(Block(int(item), 'free'))
 
-    free.append([counter,0,[]])
-    assert len(pairs) == len(free)
+    print('loaded input')
 
-    print(pairs)
-    print(free)
+    for file in files_to_move[::-1]:
+        for idx, block in enumerate(blocks):
+            if block == file:
+                break
+            if block.pair_id == 'free' and block.block_length >= file.block_length:
+                orig_len = block.block_length
+                block.block_length = file.block_length
+                block.pair_id = file.pair_id
 
+                file.pair_id = 'free'
 
-
-    for pair_idx, (_, pair_id, pair_len, ____) in enumerate(pairs[::-1]):
-        #print('trying to move pair', pair_id)
-        for free_idx, (__, free_len, ___) in enumerate(free):
-            if pair_len <= free_len:
-                #print('put', pair_id, ' in free_idx', free_idx)
-                free[free_idx][1] -= pair_len
-                free[free_idx][2].append((pair_id, pair_len))
-                pairs[-pair_idx-1][2] = 0
+                new_block = Block(orig_len - file.block_length, 'free')
+                blocks.insert(idx + 1, new_block)
                 break
 
-    print('done moving')
+    print('done moving files')
 
-    checksum = 0
-    for pair, free in zip(pairs, free):
-        counter_saved, pair_id, pair_len, true_len = pair
-        counter = counter_saved
-        #print('ticking from', counter, 'with pair', pair_id)
-        for __ in range(pair_len):
-            checksum += pair_id * counter
-            #print('inc checksum by', pair_id, 'at', counter)
-            counter += 1
-        counter = counter_saved + true_len
-
-        for pair_free in free[2]:
-            pair_id, pair_len = pair_free
-            for __ in range(pair_len):
-                checksum += pair_id * counter
-                #print('inc checksum by', pair_id, 'at', counter)
+    check_sum = 0
+    counter = 0
+    for block in blocks:
+        if block.pair_id != 'free':
+            for _ in range(block.block_length):
+                check_sum += block.pair_id * counter
                 counter += 1
-
-    print(checksum)
+        else:
+            counter += block.block_length
+    print(check_sum)

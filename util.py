@@ -58,7 +58,7 @@ def wavefront(grid: list[list], start: tuple[int, int], end: tuple[int, int], co
         for y in range(0, len(maze_costs)):
             for x in range(0, len(maze_costs[y])):
                 if maze_costs[y][x] == search_value:
-                    for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                    for dx, dy in cardinal:
                         n_x = x + dx
                         n_y = y + dy
                         if not out_of_bounds(maze_costs, n_x, n_y) and maze_costs[n_y][n_x] == 0:
@@ -68,6 +68,13 @@ def wavefront(grid: list[list], start: tuple[int, int], end: tuple[int, int], co
                                     done = True
         search_value += 1
     return maze_costs
+
+def adjacent(pt1, pt2):
+    if pt1[0] == pt2[0] and abs(pt1[1] - pt2[1]) == 1:
+        return True
+    if pt1[1] == pt2[1] and abs(pt1[0] - pt2[0]) == 1:
+        return True
+    return False
 
 # PROFILING
 # add this line around function

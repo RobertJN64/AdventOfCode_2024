@@ -47,23 +47,22 @@ class Robot:
     def __repr__(self):
         return f"Robot at ({self.x}, {self.y}) with velocity ({self.vx}, {self.vy})"
 
-MAX_SCORE = 1
+MIN_SCORE = float('inf')
 def animate(_):
     global TIMER
-    global MAX_SCORE
+    global MIN_SCORE
 
-    score = 0
-
-    while score <= MAX_SCORE:
-        score = 0
+    while True:
+        quads = [0, 0, 0, 0, 0]
         for robot in robots:
             robot.tick(MAX_X, MAX_Y)
-
-            if 20 < robot.x < 60 and 20 < robot.y < 60:
-                score += 1
+            quads[robot.quadrant(MAX_X, MAX_Y)] += 1
+        score = quads[1] * quads[2] * quads[3] * quads[4]
         TIMER += 1
+        if score < MIN_SCORE:
+            break
 
-    MAX_SCORE = score
+    MIN_SCORE = score
 
     grid = np.zeros((103,101))
     for robot in robots:

@@ -26,7 +26,7 @@ def main():
                 start = [x, y]
 
     print(goal, start)
-    queue = [State(start[0], start[1], 1, 0, f'{(start[0], start[1])}')]
+    queue = [State(start[0], start[1], 1, 0, [(start[0], start[1])])]
     best_score = float('inf')
     best_path = set()
     visited = {}
@@ -49,22 +49,16 @@ def main():
                 best_path = set()
                 best_score = state.score
             if state.score == best_score:
-                for pt in state.history.split('|'):
-                    if pt == '':
-                        continue
-                    x = int(pt[1:].split(',')[0])
-                    y = int(pt[:-1].split(',')[1])
+                for x,y in state.history:
                     best_path.add((x, y))
             continue
 
         nx = state.x + util.cardinal[state.d][0]
         ny = state.y + util.cardinal[state.d][1]
-        append_if_useful(State(nx, ny, state.d, state.score + 1, state.history + f'|{(nx, ny)}'))
-        append_if_useful(State(state.x, state.y, (state.d + 1) % 4, state.score + 1000, state.history + f'|{(state.x, state.y)}'))
-        append_if_useful(State(state.x, state.y, (state.d - 1) % 4, state.score + 1000, state.history + f'|{(state.x, state.y)}'))
+        hist = state.history.copy() + [(nx, ny)]
+        append_if_useful(State(nx, ny, state.d, state.score + 1, hist))
+        append_if_useful(State(state.x, state.y, (state.d + 1) % 4, state.score + 1000, state.history))
+        append_if_useful(State(state.x, state.y, (state.d - 1) % 4, state.score + 1000, state.history))
 
     print(best_score)
     print(len(best_path))
-
-
-

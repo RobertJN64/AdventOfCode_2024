@@ -41,8 +41,9 @@ def debug_IO(f):
         return retval
     return wrap
 
-cardinal = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-all_dirs = [(-1,-1),(1,1),(1,-1),(-1,1),(0,1),(1,0),(0,-1),(-1,0)]
+# NORTH, EAST, SOUTH, WEST
+cardinal = [(0, 1),(1, 0),(0, -1),(-1, 0)]
+all_dirs = [(0, 1),(1, 1),(1, 0),(1,-1),(0, -1),(-1,-1),(-1, 0),(-1,1)]
 
 def wavefront(grid: list[list], start: tuple[int, int], end: tuple[int, int], constraint):
     """

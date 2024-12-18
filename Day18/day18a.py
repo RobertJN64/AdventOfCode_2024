@@ -5,9 +5,16 @@ def main():
         lines = [line.strip() for line in f.readlines()]
     print(lines[0:10])
 
+    MAX = 70
 
-    answer = 0
-    for line in lines:
-        answer += int(line)
+    grid = [['.'] * (MAX+1) for _ in range(MAX+1)]
 
-    print(answer)
+    for row in lines[:1024]:
+        x, y = map(int, row.split(','))
+        grid[y][x] = '#'
+
+    def constraint(nx, ny, _, __):
+        return grid[ny][nx] == '.'
+
+    util.print_grid(grid)
+    print(util.wavefront(grid, (0,0), (MAX,MAX), constraint)[0][0] - 1)

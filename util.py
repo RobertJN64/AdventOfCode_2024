@@ -65,7 +65,7 @@ def wavefront(grid: list[list], start: tuple[int, int], end: tuple[int, int], co
                         if not out_of_bounds(maze_costs, n_x, n_y) and maze_costs[n_y][n_x] == 0:
                             if constraint(n_x, n_y, x, y):
                                 maze_costs[n_y][n_x] = search_value + 1
-                                if start == (n_x, n_y):
+                                if start[0] == n_x and start[1] == n_y:
                                     done = True
         search_value += 1
     return maze_costs

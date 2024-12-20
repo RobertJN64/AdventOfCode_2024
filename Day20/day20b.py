@@ -37,27 +37,24 @@ def main():
 
     count = 0
     for y_one, row_one in enumerate(costs):
-        print(y_one)
         for x_one, cost_one in enumerate(row_one):
             if cost_one == 0:
                 continue
 
             for y_two in range(max(0, y_one - SEARCH_SIZE), min(GRID_SIZE, y_one + SEARCH_SIZE + 1)):
-                for x_two in range(max(0, x_one - SEARCH_SIZE), min(GRID_SIZE, x_one + SEARCH_SIZE + 1)):
+                y_del = abs(y_one - y_two)
+                x_del_avail = SEARCH_SIZE - y_del
+                for x_two in range(max(0, x_one - x_del_avail), min(GRID_SIZE, x_one + x_del_avail + 1)):
                     cost_two = costs[y_two][x_two]
                     if cost_two == 0:
                         continue
+                    x_del = abs(x_one - x_two)
 
-                    delta = abs(x_one - x_two) + abs(y_one - y_two)
-                    if delta > SEARCH_SIZE:
-                        continue
+                    delta = x_del + y_del
 
-                    if cost_one - cost_two > 2:
-                        #print("Found shortcut that saves", cost_one - cost_two - 2)
-                        if cost_one - cost_two - delta >= 100:
-                            #print("Found shortcut that saves", cost_one - cost_two - delta)
-                            #print((x_one, y_one), (x_two, y_two))
-                            count += 1
+                    if cost_one - cost_two - delta >= 100:
+                        #print("Found shortcut that saves", cost_one - cost_two - delta)
+                        #print((x_one, y_one), (x_two, y_two))
+                        count += 1
 
-    print("done")
     print(count)

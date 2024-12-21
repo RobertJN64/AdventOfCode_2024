@@ -28,7 +28,19 @@ def get_sequence(start, end, pad):
     x_delta = end_coord[0] - start_coord[0]
     y_delta = end_coord[1] - start_coord[1]
     actions = '^' * -y_delta + 'v' * y_delta + '>' * x_delta + '<' * -x_delta
-    return multiset_permutations(actions)
+
+    d = {'^': (0, -1), 'v': (0, 1), '<': (-1, 0), '>': (1, 0)}
+    ok = []
+    for seq in multiset_permutations(actions):
+        c_pos = [start_coord[0], start_coord[1]]
+        for c in seq:
+            c_pos[0] += d[c][0]
+            c_pos[1] += d[c][1]
+            if pad[c_pos[1]][c_pos[0]] == ' ':
+                break
+        else:
+            ok.append(seq)
+    return ok
 
 def get_options(seq, pad):
     last_char = 'A'
@@ -48,8 +60,16 @@ def main():
         seqs = [line.strip() for line in f.readlines()]
     print(seqs[0:10])
 
-
+    total = 0
     for seq_A in seqs:
+        best = float('inf')
         for seq_B in get_options(seq_A, keypad_layout):
-            print(get_options(seq_B, dirpad_layout))
-        break
+            for seq_C in get_options(seq_B, dirpad_layout):
+                for seq_D in get_options(seq_C, dirpad_layout):
+                    best = min(best, len(seq_D))
+        print(best)
+        mul = int(seq_A[:-1])
+        print(mul)
+        print(best * mul)
+        total += best * mul
+    print(total)

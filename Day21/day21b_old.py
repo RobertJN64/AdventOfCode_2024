@@ -117,10 +117,8 @@ def main():
 
     total = 0
     for seq_A in seqs:
-        for seq_B_sections in get_sections(seq_A, keypad_layout):
-
-
-
+        best = float('inf')
+        for seq_B in get_options(seq_A, keypad_layout):
             best = min(best, recursive_lim(seq_B, nested))
 
         print(best)

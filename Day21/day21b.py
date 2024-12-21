@@ -41,16 +41,20 @@ def get_sequence(start, end, pad):
             ok.append(''.join(seq))
     return ok
 
+@functools.cache
+def rec_resolve(option, limit):
+    return layered_numpads(get_sections(option, dirpad_layout), limit)
+
 def layered_numpads(sections, limit):
     length = 0
     for section in sections:
         best = float('inf')
         for option in section:
             option = option + 'A'
-            if limit == 1:
+            if limit == 0:
                 best = min(best, len(option))
             else:
-                best = min(best, layered_numpads(get_sections(option, dirpad_layout), limit - 1))
+                best = min(best, rec_resolve(option, limit - 1))
         length += best
     return length
 
@@ -69,7 +73,7 @@ def main():
 
     total = 0
     for seq_A in seqs:
-        best = layered_numpads(get_sections(seq_A, keypad_layout), 3)
+        best = layered_numpads(get_sections(seq_A, keypad_layout), 25)
         print(best)
         mul = int(seq_A[:-1])
         print(mul)
